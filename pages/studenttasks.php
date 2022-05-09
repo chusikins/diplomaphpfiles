@@ -16,7 +16,7 @@ $links = array();
 while ($row = mysqli_fetch_array($result)){
   array_push($text, $row['exercise_text']);
   array_push($ex_id, $row['ex_id']);
-  array_push($links, "http://localhost/myphp/scripts/teacher_student_test/show_test.php?ex_id=".$row['ex_id']);
+  array_push($links, "http://localhost/myphp/diplomaphpfiles/pages/show_test.php?ex_id=".$row['ex_id']);
 }
 $tests["text"] = $text;
 $tests["ex_id"] = $ex_id;

@@ -110,7 +110,13 @@
         $_SESSION["useruid"] = $uidExists["usersUid"];
         $_SESSION["userPermission"] = $uidExists["usersPermission"];
         $_SESSION["userName"] = $uidExists["usersName"];
-        header("location: ../pages/studenttasks.php");
+        if ($_SESSION["userPermission"] === 'student'){
+          header("location: ../pages/studenttasks.php");
+          exit();
+        } else if ($_SESSION["userPermission"] === 'teacher'){
+          header("location: ../pages/teacher_landing.php");
+          exit();
+        }
         exit();
       }
     }
