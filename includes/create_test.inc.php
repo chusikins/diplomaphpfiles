@@ -10,26 +10,51 @@ if (isset($_POST['submit'])){
   3 => 'Была отправлена только часть файла',
   4 => 'Файл для отправки не был выбран.');
 
-  $image_number = trim($_REQUEST['images_number']);
-  $exercise_text = trim($_REQUEST['exercise_text']);
-  $sub_answers_amount = trim($_REQUEST['sub_answers_amount']);
+  $image_number = trim($_POST['images_number']);
+  $exercise_text = trim($_POST['exercise_text']);
+  $sub_answers_amount = trim($_POST['sub_answers_amount']);
 
   $answer_key = array();
   $sub_answer_text = array();
+
+
   for ($i=0; $i<$sub_answers_amount; $i++){
-    array_push($answer_key, $_REQUEST['member' . $i] );
-    array_push($sub_answer_text, $_REQUEST['sub_text' . $i] );
+    array_push($answer_key, $_POST['member' . $i] );
+    array_push($sub_answer_text, $_POST['sub_text' . $i] );
   }
-  $insert_exercise_sql = sprintf("INSERT INTO exercise ".
-  "(exercise_text, sub_answers_amount, image_amount)".
-  "VALUES ('%s', %d, %d);", $exercise_text, $sub_answers_amount, $image_number);
-  mysqli_query($link, $insert_exercise_sql) or die ("Not insert in DB " .mysqli_error($link));
+
+  // $insert_exercise_sql = sprintf("INSERT INTO exercise ".
+  // "(exercise_text, sub_answers_amount, image_amount)".
+  // "VALUES ('%s', %d, %d);", $exercise_text, $sub_answers_amount, $image_number);
+  $insert_exercise_sql = "INSERT INTO exercise (exercise_text, sub_answers_amount, image_amount) VALUES (?,?,?);";
+  $stmt = mysqli_stmt_init($link);
+  if (!mysqli_stmt_prepare($stmt, $insert_exercise_sql)) {
+    header("location: ../pages/create_test.php?error=stmtfailed");
+    exit();
+  }
+
+  mysqli_stmt_bind_param($stmt, "sdd", $exercise_text, $sub_answers_amount, $image_number);
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_close($stmt);
+
   $ex_id = mysqli_insert_id($link);
 
   for ($i=0; $i<$sub_answers_amount; $i++){
-    $update_answer_sql = sprintf("INSERT INTO sub_answers " .
-    "(question_id, sub_answer_id, sub_answer, sub_answers_text)" . "VALUES(%d,%d,'%s','%s')", $ex_id, $i+1, $answer_key[$i], $sub_answer_text[$i]);
-    mysqli_query($link,$update_answer_sql) or die ("Not insert in DD" .mysqli_error($link));
+    $texttemp = $sub_answer_text[$i];
+    $anskeyex = $answer_key[$i];
+    $icount = $i+1;
+    // $update_answer_sql = sprintf("INSERT INTO sub_answers " .
+    // "(question_id, sub_answer_id, sub_answer, sub_answers_text)" . "VALUES(%d,%d,'%s','%s')", $ex_id, $i+1, $answer_key[$i], $sub_answer_text[$i]);
+    // mysqli_query($link,$update_answer_sql) or die ("Not insert in DD" .mysqli_error($link));
+    $insert_answer_sql = "INSERT INTO sub_answers (question_id, sub_answer_id, sub_answer, sub_answers_text) VALUES (?,?,?,?);";
+    $stmt = mysqli_stmt_init($link);
+    if (!mysqli_stmt_prepare($stmt, $insert_answer_sql)) {
+      header("location: ../pages/create_test.php?error=stmtfailed");
+      exit();
+    }
+    mysqli_stmt_bind_param($stmt, "ddss", $ex_id, $icount, $anskeyex, $texttemp);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
   }
 
   //проверка отсутвия ошибки при отправке изображения
@@ -75,37 +100,9 @@ if (isset($_POST['submit'])){
     mysqli_query($link, $insert_image_sql);
 
   }
-  //
-  // for ($i=0; $i<$images_number, $i++){
-  //   $insert_image_sql = sprintf("INSERT INTO images " .
-  //   "(ex_id, pic_ex_id, mime_type," .
-  //   "filesize, imagedata, filename)" .
-  //   "VALUES (%d, %d, '%s', %d, '%s','%s');",
-  //   mysqli_real_escape_string($link, $ex_id),
-  //   mysqli_real_escape_string($link, $i),
-  //   mysqli_real_escape_string($link, $image_mime_type),
-  //   mysqli_real_escape_string($link, $image_size),
-  //   mysqli_real_escape_string($link, $image_data),
-  //   mysqli_real_escape_string($link, $image_filename));
-  //   mysqli_query($link, $insert_image_sql);
-  //
-  // }
-  // $insert_image_sql = sprintf("INSERT INTO images " .
-  // "(ex_id, pic_ex_id, mime_type," .
-  // "filesize, imagedata, filename)" .
-  // "VALUES (%d, %d, '%s', %d, '%s','%s');",
-  // mysqli_real_escape_string($link, $ex_id),
-  // mysqli_real_escape_string($link, $i),
-  // mysqli_real_escape_string($link, $image_mime_type),
-  // mysqli_real_escape_string($link, $image_size),
-  // mysqli_real_escape_string($link, $image_data),
-  // mysqli_real_escape_string($link, $image_filename));
-  // mysqli_query($link, $insert_image_sql);
-
-   //
-    header("Location: ../pages/show_test.php?ex_id=" . $ex_id);
+    header("Location: ../pages/teacher_landing.php?error=created_test");
 }
   else {
-    header("location: ../pages/create_test.php?errortemp");
+    header("location: ../pages/create_test.php");
   }
  ?>
