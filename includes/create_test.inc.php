@@ -13,7 +13,7 @@ if (isset($_POST['submit'])){
   $image_number = trim($_POST['images_number']);
   $exercise_text = trim($_POST['exercise_text']);
   $sub_answers_amount = trim($_POST['sub_answers_amount']);
-
+  $group_assigned = trim($_POST['group']);
   $answer_key = array();
   $sub_answer_text = array();
 
@@ -26,14 +26,14 @@ if (isset($_POST['submit'])){
   // $insert_exercise_sql = sprintf("INSERT INTO exercise ".
   // "(exercise_text, sub_answers_amount, image_amount)".
   // "VALUES ('%s', %d, %d);", $exercise_text, $sub_answers_amount, $image_number);
-  $insert_exercise_sql = "INSERT INTO exercise (exercise_text, sub_answers_amount, image_amount) VALUES (?,?,?);";
+  $insert_exercise_sql = "INSERT INTO exercise (exercise_text, sub_answers_amount, image_amount, exerciseGroup) VALUES (?,?,?,?);";
   $stmt = mysqli_stmt_init($link);
   if (!mysqli_stmt_prepare($stmt, $insert_exercise_sql)) {
     header("location: ../pages/create_test.php?error=stmtfailed");
     exit();
   }
 
-  mysqli_stmt_bind_param($stmt, "sdd", $exercise_text, $sub_answers_amount, $image_number);
+  mysqli_stmt_bind_param($stmt, "sdds", $exercise_text, $sub_answers_amount, $image_number, $group_assigned);
   mysqli_stmt_execute($stmt);
   mysqli_stmt_close($stmt);
 

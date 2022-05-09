@@ -99,6 +99,15 @@
             <fieldset>
               <div id="image_container", align='right'>
             </fieldset>
+            <fieldset>
+              <select id="group" name="group">
+                <option value="101">101</option>
+                <option value="102">102</option>
+                <option value="103">103</option>
+                <option value="104">104</option>
+                <option value="105">105</option>
+              </select>
+            </fieldset>
             <br />
             <fieldset class="center">
                 <input type="submit" name="submit" value="submit">

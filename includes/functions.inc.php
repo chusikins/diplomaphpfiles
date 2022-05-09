@@ -63,8 +63,8 @@
   }
 
 
-    function createUser($link, $name, $email, $username, $pwd){
-      $sql = "INSERT INTO users (usersName, usersEmail, usersUid, usersPwd, usersPermission) VALUES (?,?,?,?, 'student');";
+    function createUser($link, $name, $email, $username, $pwd, $group){
+      $sql = "INSERT INTO users (usersName, usersEmail, usersUid, usersPwd, usersPermission, usersGroup) VALUES (?,?,?,?, 'student', ?);";
       $stmt = mysqli_stmt_init($link);
       if (!mysqli_stmt_prepare($stmt, $sql)) {
         header("location: ../pages/signup.php?error=stmtfailed");
@@ -73,7 +73,7 @@
 
       $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
 
-      mysqli_stmt_bind_param($stmt, "ssss", $name, $email, $username, $hashedPwd);
+      mysqli_stmt_bind_param($stmt, "sssss", $name, $email, $username, $hashedPwd, $group);
       mysqli_stmt_execute($stmt);
       mysqli_stmt_close($stmt);
       header("location: ../pages/signup.php?error=none");
@@ -110,6 +110,7 @@
         $_SESSION["useruid"] = $uidExists["usersUid"];
         $_SESSION["userPermission"] = $uidExists["usersPermission"];
         $_SESSION["userName"] = $uidExists["usersName"];
+        $_SESSION["userGroup"] = $uidExists["usersGroup"];
         if ($_SESSION["userPermission"] === 'student'){
           header("location: ../pages/studenttasks.php");
           exit();

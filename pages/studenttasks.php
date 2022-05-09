@@ -7,8 +7,10 @@ if ($_SESSION["userPermission"] !== 'student'){
   header("location: ../pages/login.php?error=logerror");
   exit();
 }
-$sql_exercise_query = "SELECT * FROM exercise;";
+//weird '' and "" shit, look into it.......
+$sql_exercise_query = "SELECT * FROM exercise WHERE exerciseGroup = '". $_SESSION["userGroup"]. "';";
 $result = mysqli_query($link, $sql_exercise_query);
+
 $text = array();
 $ex_id = array();
 $tests = array();

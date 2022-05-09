@@ -14,6 +14,13 @@
       <input type="text" name="uid" placeholder="Имя пользователя...">
       <input type="password" name="pwd" placeholder="Пароль...">
       <input type="password" name="pwdrepeat" placeholder="Повторить...">
+      <select id="group" name="group">
+        <option value="101">101</option>
+        <option value="102">102</option>
+        <option value="103">103</option>
+        <option value="104">104</option>
+        <option value="105">105</option>
+      </select>
       <button type="submit" name="submit">Sign Up</button>
     </form>
     <?php
