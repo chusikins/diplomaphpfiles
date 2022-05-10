@@ -20,5 +20,8 @@ require_once '../db/database_connection.php';
 <form class="" action="create_test.php" method="post">
   <input type="submit" value="Создать тест" />
 </form>
+<form class="" action="viewanswers.php" method="post">
+    <input type="submit" value="Посмотреть ответы" />
+</form>
   </body>
 </html>

@@ -1,31 +1,19 @@
 <?php
 session_start();
-require_once '../db/database_connection.php';
+
 
 
 if ($_SESSION["userPermission"] !== 'student'){
   header("location: ../pages/login.php?error=logerror");
   exit();
 }
+require_once '../db/database_connection.php';
+require_once '../includes/functions.inc.php';
 //weird '' and "" shit, look into it.......
-$sql_exercise_query = "SELECT * FROM exercise WHERE exerciseGroup = '". $_SESSION["userGroup"]. "';";
-$result = mysqli_query($link, $sql_exercise_query);
 
-$text = array();
-$ex_id = array();
-$tests = array();
-$links = array();
-while ($row = mysqli_fetch_array($result)){
-  array_push($text, $row['exercise_text']);
-  array_push($ex_id, $row['ex_id']);
-  array_push($links, "http://localhost/myphp/diplomaphpfiles/pages/show_test.php?ex_id=".$row['ex_id']);
-}
-$tests["text"] = $text;
-$tests["ex_id"] = $ex_id;
-$tests["link"] = $links;
-$jsonTests = json_encode($tests);
+$group = $_SESSION["userGroup"];
+$jsonTests=displayTests($link,$group);
  ?>
- <!DOCTYPE html>
  <html lang="en" dir="ltr">
    <head>
      <meta charset="utf-8">
