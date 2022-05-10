@@ -1,8 +1,9 @@
 <?php
 require '../db/database_connection.php';
-
+session_start();
 //вводим нужные переменные из таблиц.
 $ex_id = $_REQUEST['ex_id'];
+$_SESSION['current_ex_id'] = $ex_id;
 $select_query = "SELECT * FROM exercise WHERE ex_id = " . $ex_id;
 $result = mysqli_query($link, $select_query);
 if ($result){
@@ -125,15 +126,20 @@ if ($result){
 
         </div>
     </fieldset>
+    <form class="" action="submit_answer.php" method="post">
+
       <div id="container">
         <a href="#" id="filldetails" onclick="addFields()">Вывести</a>
       </div>
       <button type="button" onclick="checkfunc()">Проверить</button>
       <br>
+      <fieldset>
+        <input type="submit" name="submit" value="submit">
+      </fieldset>
       <div id="checker">
       </div>
     </div>
-
+    </form>
     <script>
       const str = <?php echo json_encode($exercise); ?>;
       document.addEventListener("DOMContentLoaded", () => {
