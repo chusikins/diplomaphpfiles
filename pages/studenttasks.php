@@ -1,13 +1,11 @@
 <?php
-session_start();
-
+require_once "navbar.php";
 
 
 if ($_SESSION["userPermission"] !== 'student'){
   header("location: ../pages/login.php?error=logerror");
   exit();
 }
-require_once '../db/database_connection.php';
 require_once '../includes/functions.inc.php';
 //weird '' and "" shit, look into it.......
 

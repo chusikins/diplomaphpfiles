@@ -1,6 +1,7 @@
 <?php
 
 if (isset($_POST['submit'])){
+  session_start();
   require_once '../db/database_connection.php';
   $upload_dir = "D:/xammp/htdocs/myPHP/" . "uploads/test_images/";
   $upload_dir_temp = "D:/xammp/htdocs/myPHP/upload";
@@ -12,13 +13,12 @@ if (isset($_POST['submit'])){
 
   $image_number = trim($_POST['images_number']);
   $exercise_text = trim($_POST['exercise_text']);
-  $sub_answers_amount = trim($_POST['sub_answers_amount']);
+  $sub_answers_amount = trim($_POST['sub_answer_amount']);
   $group_assigned = trim($_POST['group']);
   $answer_key = array();
   $sub_answer_text = array();
 
-
-  for ($i=0; $i<$sub_answers_amount; $i++){
+  for ($i=1; $i<=$sub_answers_amount; $i++){
     array_push($answer_key, $_POST['member' . $i] );
     array_push($sub_answer_text, $_POST['sub_text' . $i] );
   }

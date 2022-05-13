@@ -1,6 +1,5 @@
 <?php
-require '../db/database_connection.php';
-session_start();
+require_once "navbar.php";
 //вводим нужные переменные из таблиц.
 $ex_id = $_REQUEST['ex_id'];
 $_SESSION['current_ex_id'] = $ex_id;
@@ -45,77 +44,9 @@ if ($result){
 }
 
  ?>
-<html lang="en" dir="ltr">
-  <head>
-    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
-    <link rel="stylesheet" href="css/texmath.css">
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script>
-    <script src="texmath.js"></script>
-    <script type="text/javascript">
-    //так же скрипты для создания ячеек для ответа студента
-    var images = <?php echo json_encode($image_data); ?>;
-    var answers = <?php echo json_encode($sub_answers); ?>;
-    var sub_text = <?php echo json_encode($sub_answer_text); ?>;
-      function showImages(){
-         var number = images.length;
-         var container2 = document.getElementById("container2");
-         while (container2.hasChildNodes()) {
-             container2.removeChild(container2.lastChild);
-         }
-         for (i=0; i<number; i++){
-           var image = new Image();
-           image.src = 'data:image/jpeg;base64,'+ images[i];
-           container2.appendChild(image);
-         }
-      };
-      function addFields(){
-          // Number of inputs to create
-          var number = answers.length;
-          // Container <div> where dynamic content will be placed
-          var container = document.getElementById("container");
-          // Clear previous contents of the container
-          while (container.hasChildNodes()) {
-              container.removeChild(container.lastChild);
-          }
-          for (i=0;i<number;i++){
-              // Append a node with a random text
-              container.appendChild(document.createTextNode("Answer " + (i+1)));
-              container.appendChild(document.createElement("br"))
-              container.appendChild(document.createTextNode(sub_text[i] + "      "));
-              // Create an <input> element, set its type and name attributes
-              var input = document.createElement("input");
-              input.type = "text";
-              input.name = "member" + i;
-              input.id = "member" + i;
-              container.appendChild(input);
-              // Append a line break
-              container.appendChild(document.createElement("br"));
-          }
-      }
-      // простая функция для сравнения строки. НЕ финальное решение задачи
-      function checkfunc(){
-        var number = answers.length;
-        var div = document.getElementById('checker')
-        while (div.hasChildNodes()){
-          div.removeChild(div.lastChild);
-        }
-        for (i=0;i<number;i++){
-          var student_answer = document.getElementById("member"+i).value;
-          if (student_answer === answers[i]){
-            div.innerHTML += i+1 + " is correct <br>";
-          } else {
-              div.innerHTML += i+1 + " is incorrect <br>";
-          }
-        }
-      }
 
-    </script>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
   <body onload="showImages()">
-    <div id="header"><h1>PHP & MySQL</h1></div>
+    <div id="header"><h1>Filler</h1></div>
     <div id="example"></div>
     <fieldset>
       <div id="content">
@@ -140,15 +71,73 @@ if ($result){
       </div>
     </div>
     </form>
-    <script>
-      const str = <?php echo json_encode($exercise); ?>;
-      document.addEventListener("DOMContentLoaded", () => {
-        const md = markdownit({html:true})
-                      .use(texmath, { engine: katex,
-                                      delimiters: 'dollars',
-                                      katexOptions: { macros: {"\\RR": "\\mathbb{R}"} } } );
-        out.innerHTML = md.render(str);
-    })
-    </script>
+
   </body>
+
+  <script type="text/javascript">
+  //так же скрипты для создания ячеек для ответа студента
+  var images = <?php echo json_encode($image_data); ?>;
+  var answers = <?php echo json_encode($sub_answers); ?>;
+  var sub_text = <?php echo json_encode($sub_answer_text); ?>;
+    function showImages(){
+       var number = images.length;
+       var container2 = document.getElementById("container2");
+       while (container2.hasChildNodes()) {
+           container2.removeChild(container2.lastChild);
+       }
+       for (i=0; i<number; i++){
+         var image = new Image();
+         image.src = 'data:image/jpeg;base64,'+ images[i];
+         container2.appendChild(image);
+       }
+    };
+    function addFields(){
+        // Number of inputs to create
+        var number = answers.length;
+        // Container <div> where dynamic content will be placed
+        var container = document.getElementById("container");
+        // Clear previous contents of the container
+        while (container.hasChildNodes()) {
+            container.removeChild(container.lastChild);
+        }
+        for (i=0;i<number;i++){
+            // Append a node with a random text
+            container.appendChild(document.createTextNode("Answer " + (i+1)));
+            container.appendChild(document.createElement("br"))
+            container.appendChild(document.createTextNode(sub_text[i] + "      "));
+            // Create an <input> element, set its type and name attributes
+            var input = document.createElement("input");
+            input.type = "text";
+            input.name = "member" + i;
+            input.id = "member" + i;
+            container.appendChild(input);
+            // Append a line break
+            container.appendChild(document.createElement("br"));
+        }
+    }
+    // простая функция для сравнения строки. НЕ финальное решение задачи
+    function checkfunc(){
+      var number = answers.length;
+      var div = document.getElementById('checker')
+      while (div.hasChildNodes()){
+        div.removeChild(div.lastChild);
+      }
+      for (i=0;i<number;i++){
+        var student_answer = document.getElementById("member"+i).value;
+        if (student_answer === answers[i]){
+          div.innerHTML += i+1 + " is correct <br>";
+        } else {
+            div.innerHTML += i+1 + " is incorrect <br>";
+        }
+      }
+    }
+    const str = <?php echo json_encode($exercise); ?>;
+    document.addEventListener("DOMContentLoaded", () => {
+      const md = markdownit({html:true})
+                    .use(texmath, { engine: katex,
+                                    delimiters: 'dollars',
+                                    katexOptions: { macros: {"\\RR": "\\mathbb{R}"} } } );
+      out.innerHTML = md.render(str);
+  })
+  </script>
 </html>
