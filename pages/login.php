@@ -1,16 +1,19 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <section>
+<?php include_once 'navbar.php' ?>
+    <section class="wrapper">
+      <div class="form">
+
+
     <h2>Login</h2>
-    <form action="../includes/login.inc.php" method="post">
-      <input type="text" name="uid" placeholder="Email\Username">
-      <input type="password" name="pwd" placeholder="Password">
-      <button type="submit" name="submit">Log in</button>
+    <form action="../includes/login.inc.php" method="post" class="login-form">
+      <div class="form-group">
+        <label>Email\Username:</label>
+        <input type="text" name="uid" "Email\Username">
+      </div>
+      <div class="form-group">
+          <label>Password:</label>
+          <input type="password" name="pwd">
+      </div>
+      <button type="submit" name="submit" class="button">Log in</button>
     </form>
     <?php
       if (isset($_GET["error"])){
@@ -25,6 +28,7 @@
         }
       }
      ?>
+     </div>
     </section>
   </body>
 </html>

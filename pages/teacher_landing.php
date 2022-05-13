@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'navbar.php';
 require_once '../db/database_connection.php';
 
 // if ($_SESSION["userPermission"] !== 'teacher'){
