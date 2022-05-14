@@ -17,6 +17,9 @@ if (isset($_POST['submit'])){
   $group_assigned = trim($_POST['group']);
   $answer_key = array();
   $sub_answer_text = array();
+  // print_r($_FILES);
+  // print_r($_POST);
+  // exit()
 
   for ($i=1; $i<=$sub_answers_amount; $i++){
     array_push($answer_key, $_POST['member' . $i] );

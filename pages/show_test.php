@@ -58,9 +58,9 @@ if ($result){
         </div>
     </fieldset>
     <form class="" action="submit_answer.php" method="post">
-
+      <a href="#" id="filldetails" onclick="addFields()">Вывести</a>
       <div id="container">
-        <a href="#" id="filldetails" onclick="addFields()">Вывести</a>
+
       </div>
       <button type="button" onclick="checkfunc()">Проверить</button>
       <br>

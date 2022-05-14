@@ -7,7 +7,7 @@
         <div class="form">
 
 
-        <form action="../includes/create_test.inc.php" method="post">
+        <form action="../includes/create_test.inc.php" method="post" enctype="multipart/form-data">
 
             <fieldset>
               <fieldset>
@@ -15,27 +15,23 @@
               </fieldset>
               <div class="">
                 <label>Текст Задание</label>
-
                 <textarea name="exercise_text" id = "inp" oninput="parse()"></textarea>
-                <!-- <input type="hidden" name="MAX_FILE_SIZE" value="2000000"> -->
               </div>
-
-
-
-                  <br>
-                  <label for="test_pic">Отправка изображения:</label>
-                  <input type="text" id="images_number" name="images_number" value=""/><br/>
-                  <a href="#" id="filldetails" onclick="addImages()">Вывести загрузку изображения</a>
-
+              <select id="group" name="group">
+                <option value="101">101</option>
+                <option value="102">102</option>
+                <option value="103">103</option>
+                <option value="104">104</option>
+                <option value="105">105</option>
+              </select>
             </fieldset>
 
 
             <fieldset>
               <button type="button" name="addfield" id="addfield" class="button" onclick="addFields()">Новое задание</button>
-              <button type="button" name="button" onclick="deleteField()">AAAAA</button>
+              <button type="button" name="button" onclick="deleteField()" class="button">Удалить последнее</button>
                 <div id="sub_answer_container">
                   <label for="answers">Число промежуточных:</label>
-                  <br>
                   Задание 1:
                   <input type="hidden" name="sub_answer_amount" id = "sub_answer_amount" value="">
                   <input type="text" id="sub_text1" name="sub_text1" value="">
@@ -47,16 +43,19 @@
 
 
             <fieldset>
-              <div id="image_sub_answer_container">
+
+              <label for="test_pic">Отправка изображения:</label>
+
+              <input type="text" id="images_number" name="images_number" value=""/><br/>
+              <a href="#" id="filldetails" onclick="addImages()">Вывести загрузку изображения</a>
+              <input type="hidden" name="TEST" value="!!!!!!!!!!!!!!!!!!!!!!!">
+              <input type="hidden" name="MAX_FILE_SIZE" value="2000000">
+              <div id="image_container">
+
+              </div>
             </fieldset>
             <fieldset>
-              <select id="group" name="group">
-                <option value="101">101</option>
-                <option value="102">102</option>
-                <option value="103">103</option>
-                <option value="104">104</option>
-                <option value="105">105</option>
-              </select>
+
             </fieldset>
             <br />
             <fieldset>
@@ -71,7 +70,6 @@
         </div>
         </div>
 
-    </div>
     </div>
     <div id="footer"></div>
     <script type="text/javascript">

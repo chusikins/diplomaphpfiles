@@ -7,17 +7,21 @@ $result = mysqli_query($link, $sql_exercise_query);
 $text = array();
 $ex_id = array();
 $tests = array();
+$group = array();
 $links = array();
 while ($row = mysqli_fetch_array($result)){
   array_push($text, $row['exercise_text']);
   array_push($ex_id, $row['ex_id']);
+  array_push($group, $row["exerciseGroup"]);
   array_push($links, "http://localhost/myphp/diplomaphpfiles/pages/show_test_results.php?ex_id=".$row['ex_id']);
+
 }
 $tests["text"] = $text;
 $tests["ex_id"] = $ex_id;
+$tests["group"] = $group;
 $tests["link"] = $links;
-$jsonTests = json_encode($tests);
 
+$jsonTests = json_encode($tests);
 
 // if ($_SESSION["userPermission"] !== 'teacher'){
 //   header("location: ../pages/login.php?error=logerror");
@@ -25,7 +29,7 @@ $jsonTests = json_encode($tests);
 // }
  ?>
 <form class="" action="create_test.php" method="post">
-  <input type="submit" value="Создать тест" />
+  <input type="submit" value="Создать тест" class = "button" />
 </form>
 
 <p id="test">Привет <?php echo $_SESSION["userName"] ?> !</p>
