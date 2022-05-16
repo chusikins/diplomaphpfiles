@@ -10,11 +10,13 @@ if (isset($_POST['submit'])){
   2 => 'Превышен макс. размер файла, указанный в форме HTML',
   3 => 'Была отправлена только часть файла',
   4 => 'Файл для отправки не был выбран.');
-
+  
   $image_number = trim($_POST['images_number']);
   $exercise_text = trim($_POST['exercise_text']);
   $sub_answers_amount = trim($_POST['sub_answer_amount']);
   $group_assigned = trim($_POST['group']);
+  $ex_name = trim($_POST['ex_name']);
+  $teacher_name = $_SESSION["userName"];
   $answer_key = array();
   $sub_answer_text = array();
   // print_r($_FILES);
@@ -29,14 +31,14 @@ if (isset($_POST['submit'])){
   // $insert_exercise_sql = sprintf("INSERT INTO exercise ".
   // "(exercise_text, sub_answers_amount, image_amount)".
   // "VALUES ('%s', %d, %d);", $exercise_text, $sub_answers_amount, $image_number);
-  $insert_exercise_sql = "INSERT INTO exercise (exercise_text, sub_answers_amount, image_amount, exerciseGroup) VALUES (?,?,?,?);";
+  $insert_exercise_sql = "INSERT INTO exercise (exercise_text, sub_answers_amount, image_amount, exerciseGroup, exerciseName, exerciseTeacher) VALUES (?,?,?,?,?,?);";
   $stmt = mysqli_stmt_init($link);
   if (!mysqli_stmt_prepare($stmt, $insert_exercise_sql)) {
     header("location: ../pages/create_test.php?error=stmtfailed");
     exit();
   }
 
-  mysqli_stmt_bind_param($stmt, "sdds", $exercise_text, $sub_answers_amount, $image_number, $group_assigned);
+  mysqli_stmt_bind_param($stmt, "sddsss", $exercise_text, $sub_answers_amount, $image_number, $group_assigned, $ex_name, $teacher_name);
   mysqli_stmt_execute($stmt);
   mysqli_stmt_close($stmt);
 

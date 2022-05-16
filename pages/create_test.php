@@ -14,7 +14,9 @@
                 <div id="out" class="markdown-body"></div>
               </fieldset>
               <div class="">
-                <label>Текст Задание</label>
+                <label>Название Задачи</label>
+                <input type="text" name="ex_name">
+                <label>Текст Задачи</label>
                 <textarea name="exercise_text" id = "inp" oninput="parse()"></textarea>
               </div>
               <select id="group" name="group">
@@ -28,14 +30,19 @@
 
 
             <fieldset>
-              <button type="button" name="addfield" id="addfield" class="button" onclick="addFields()">Новое задание</button>
+              <button type="button" name="addfield" id="addfield" class="button" onclick="addFields()">Новая Контрольная Точка</button>
               <button type="button" name="button" onclick="deleteField()" class="button">Удалить последнее</button>
+              <select id="addfieldselector" name="addfieldselector">
+                <option value="0">Число</option>
+                <option value="1">Изображение</option>
+              </select>
                 <div id="sub_answer_container">
-                  <label for="answers">Число промежуточных:</label>
-                  Задание 1:
+                  <label>Число Конторльных Точек:</label>
+                  Контрольная Точка 1:
+                  <br>
                   <input type="hidden" name="sub_answer_amount" id = "sub_answer_amount" value="">
-                  <input type="text" id="sub_text1" name="sub_text1" value="">
-                  <input type="text" id="member1" name="member1" value="">
+                  <input type="text" id="sub_text1" name="sub_text1" placeholder="Вопрос">
+                  <input type="text" id="member1" name="member1" placeholder="Ответ">
                   <br>
                 </div>
             </fieldset>
@@ -48,7 +55,6 @@
 
               <input type="text" id="images_number" name="images_number" value=""/><br/>
               <a href="#" id="filldetails" onclick="addImages()">Вывести загрузку изображения</a>
-              <input type="hidden" name="TEST" value="!!!!!!!!!!!!!!!!!!!!!!!">
               <input type="hidden" name="MAX_FILE_SIZE" value="2000000">
               <div id="image_container">
 
@@ -79,21 +85,23 @@
         i++;
         var sub_answer_container = document.getElementById("sub_answer_container");
         var sub_answer_amount = document.getElementById("sub_answer_amount")
-
-        // var newDiv = document.createElement("div");
-        // var oldDiv = document.getElementById("submarker");
-        // if (oldDiv){
-        //   oldDiv.setAttribute("id", "temp");
-        // }
-        //   newDiv.setAttribute("id", "marker"+i);
-
-
+        var br = document.createElement("br");
+        br.id = "br";
 
         var input = document.createElement("input");
-        input.type = "text";
-        input.setAttribute("placeholder", "Ответ");
-        input.setAttribute("name", "member" + i);
-        input.setAttribute("id", "member" + i);
+        if (document.getElementById("addfieldselector").value == "1"){
+
+          input.type = "hidden";
+          input.value = "image";
+          input.setAttribute("name", "member" + i);
+          input.setAttribute("id", "member" + i);
+        } else{
+          input.type = "text";
+          input.setAttribute("placeholder", "Ответ");
+          input.setAttribute("name", "member" + i);
+          input.setAttribute("id", "member"+ i);
+        }
+
 
         var sub_answer_text = document.createElement("input");
         sub_answer_text.type = "text";
@@ -101,67 +109,37 @@
         sub_answer_text.id = "sub_text" + i;
         sub_answer_text.setAttribute("placeholder", "Вопрос");
 
+        var text = document.createElement("p");
+        text.innerText = "Контрольная Точка " + i + ":";
+        text.id = "text" + i;
 
-        // var button = document.createElement("button");
-        // var old_button = document.getElementById("addfield");
-        // button.setAttribute("onclick", "addFields()");
-        // button.setAttribute("id", "addfield");
-        // button.setAttribute("class", "button");
-        // button.textContent = "Добавить задание";
-        // old_button.remove();
-
-
-
-
-        // newDiv.appendChild(document.createTextNode("Задание " + (i) + ":"));
-        // newDiv.appendChild(sub_answer_text);
-        // newDiv.appendChild(input);
-        // newDiv.appendChild(document.createElement("br"));
-        // sub_answer_container.appendChild(newDiv);
-
-        sub_answer_container.appendChild(document.createTextNode("Задание " + (i) + ":"));
+        sub_answer_container.appendChild(text);
         sub_answer_container.appendChild(sub_answer_text);
         sub_answer_container.appendChild(input);
-        sub_answer_container.appendChild(document.createElement("br"));
+        if (input.type == "hidden") {
+          sub_answer_container.appendChild(document.createTextNode("Ответ студента - изображение"));
+        }
+        sub_answer_container.appendChild(br);
 
         sub_answer_amount.setAttribute("value", i);
 
-        // var lastfield = document.getElementById("temp");
-        // lastfield.setAttribute("oninput", "dummy()");
-        // lastfield.setAttribute("name", "member" + i);
-        // lastfield.setAttribute("id", "member" + i );
-        // sub_answer_container.appendChild(document.createTextNode("Задание " + (i)));
-        // var input = document.createElement("input");
-        // var sub_answer_text = document.createElement("input");
-        // input.type = "text";
-        // input.id = "temp";
-        // input.setAttribute("placeholder", i);
-        // input.setAttribute("oninput", "addFields()");
-        // input.setAttribute("id","temp");
-        // sub_answer_text.type = "text";
-        // sub_answer_text.name = "sub_text" + i;
-        // sub_answer_text.setAttribute("placeholder", "Вопрос");
-        // sub_answer_container.appendChild(sub_answer_text);
-        // sub_answer_container.appendChild(input);
-        // sub_answer_container.appendChild(document.createElement("br"));
-
-        // // Number of inputs to create
-        // var number = document.getElementById("sub_answers_amount").value;
-        // //  <div> where dynamic content will be placed
-        // var sub_answer_container = document.getElementById("sub_answer_container");
-        // // Clear previous contents of the sub_answer_container
-        // while (sub_answer_container.hasChildNodes()) {
-        //     sub_answer_container.removeChild(sub_answer_container.lastChild);
-        // }
 
     }
 
     function deleteField(){
-      var divtodelete = document.getElementById("marker"+i);
+      if (i===1){return;}
+      var divtodelete = document.getElementById("member"+i);
+      var subtodelete = document.getElementById("sub_text"+i);
+      var texttodelete = document.getElementById("text"+i);
+      var brtodelete = document.getElementById("br");
       if (divtodelete){
       divtodelete.remove();
+      subtodelete.remove();
+      texttodelete.remove();
+      brtodelete.remove();
       i--;
-      sub_answer_amount.setAttribute("value", i);}
+      sub_answer_amount.setAttribute("value", i);
+    }
 
     }
 

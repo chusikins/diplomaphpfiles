@@ -7,7 +7,7 @@ body{
 .button{
   background-color: #333;
   color:#fff;
-  padding: 10px, 15px;
+  padding: 5px 5px;
   border: none;
 }
 .button:hover{
@@ -69,8 +69,14 @@ body{
 }
 #container{
   padding: 20px;
-  width: 80%
-  display:inline;
+  width: 80%;
+
+}
+#container label{
+  padding: 20px;
+}
+.contbutton{
+  padding-left: 20px;
 }
 
 .errors{
@@ -86,4 +92,15 @@ body{
   width:80%;
   margin: auto;
   overflow: hidden;
+}
+#container2 img{
+  display: block;
+  max-width: 30%;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#sub_answer_container p{
+  margin: 0;
 }
