@@ -8,20 +8,24 @@
   $ex_id = $_SESSION['current_ex_id'];
   $upload_dir = "D:/xammp/htdocs/myPHP/" . "uploads/test_images/";
   $upload_dir_temp = "D:/xammp/htdocs/myPHP/upload";
-
+  if (count($_FILES) === 0){
+    $status = '0';
+  } else {
+    $status = '1';
+  }
 
   $select_query = "SELECT * FROM exercise WHERE ex_id = " . $ex_id;
   $result = mysqli_query($link, $select_query);
   $row = mysqli_fetch_array($result);
   $sub_answers_amount = $row['sub_answers_amount'];
 
-  $insert_complition_sql = "INSERT INTO completedexercises (ceExID, cdUserID, cdUserGroup, cdImageStatus) VALUES (?,?,?,'0');";
+  $insert_complition_sql = "INSERT INTO completedexercises (ceExID, cdUserID, cdUserGroup, cdImageStatus) VALUES (?,?,?,?);";
   $stmt = mysqli_stmt_init($link);
   if (!mysqli_stmt_prepare($stmt, $insert_complition_sql)) {
     header("location: ../pages/studenttasks.php?error=stmtfailed");
     exit();
   }
-  mysqli_stmt_bind_param($stmt, "dds", $ex_id, $userid, $groupnumber);
+  mysqli_stmt_bind_param($stmt, "ddss", $ex_id, $userid, $groupnumber, $status);
   mysqli_stmt_execute($stmt);
   mysqli_stmt_close($stmt);
 
@@ -64,7 +68,7 @@
     $insert_image_sql = sprintf("INSERT INTO studentimages " .
     "(siExID, siSubAnsID, siUserID, siMimetype," .
     "	siImgageData, siFileName, siFileSize)" .
-    "VALUES (%d, %d, %d, '%s', %d, '%s','%s');",
+    "VALUES (%d, %d, %d, '%s', '%s', '%s',%d);",
     mysqli_real_escape_string($link, $ex_id),
     mysqli_real_escape_string($link, $subansimages[$i]),
     mysqli_real_escape_string($link, $userid),

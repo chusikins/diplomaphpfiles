@@ -104,3 +104,22 @@ body{
 #sub_answer_container p{
   margin: 0;
 }
+
+table, th, td{
+  border: 1px solid;
+  border-collapse: collapse;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.indent{
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+}
+#show_image img{
+  display: block;
+  max-width: 30%;
+  height: auto;
+}

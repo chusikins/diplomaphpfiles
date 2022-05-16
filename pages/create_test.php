@@ -40,7 +40,7 @@
                   <label>Число Конторльных Точек:</label>
                   Контрольная Точка 1:
                   <br>
-                  <input type="hidden" name="sub_answer_amount" id = "sub_answer_amount" value="">
+                  <input type="hidden" name="sub_answer_amount" id = "sub_answer_amount" value="1">
                   <input type="text" id="sub_text1" name="sub_text1" placeholder="Вопрос">
                   <input type="text" id="member1" name="member1" placeholder="Ответ">
                   <br>

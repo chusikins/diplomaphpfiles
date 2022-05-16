@@ -127,18 +127,38 @@
       $result = mysqli_query($link, $sql_exercise_query);
       $ex_name = array();
       $ex_id = array();
+      $teacher = array();
       $tests = array();
       $links = array();
       while ($row = mysqli_fetch_array($result)){
+        array_push($teacher, $row['exerciseTeacher']);
         array_push($ex_name, $row['exerciseName']);
         array_push($ex_id, $row['ex_id']);
         array_push($links, "http://localhost/myphp/diplomaphpfiles/pages/show_test.php?ex_id=".$row['ex_id']);
       }
       $tests["text"] = $ex_name;
+      $tests["teacher"] = $teacher;
       $tests["ex_id"] = $ex_id;
       $tests["link"] = $links;
       $jsonTests = json_encode($tests);
       return $jsonTests;
+    }
+
+
+    function update_submitted_answer($link, $result,$comments,$ex_id,$user_id){
+      $result = "'". $result . "'";
+
+      $sql_update_query = "UPDATE completedexercises SET cdImageStatus =". $result .", ceComments = ? WHERE ceExID = ? AND cdUserID = ?" ;
+      $stmt = mysqli_stmt_init($link);
+      if (!mysqli_stmt_prepare($stmt, $sql_update_query)) {
+        header("location: ../pages/teacher_landing.php?error=stmtfailed");
+        exit();
+      }
+      mysqli_stmt_bind_param($stmt, "sdd", $comments, $ex_id, $user_id);
+      mysqli_stmt_execute($stmt);
+      mysqli_stmt_close($stmt);
+      header("location: ../pages/teacher_landing.php?ex_id=". $ex_id);
+      exit();
     }
 
  ?>

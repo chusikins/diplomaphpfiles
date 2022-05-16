@@ -8,20 +8,17 @@ if ($_SESSION["userPermission"] !== 'student'){
 }
 require_once '../includes/functions.inc.php';
 //weird '' and "" shit, look into it.......
-
 $group = $_SESSION["userGroup"];
 $jsonTests=displayTests($link,$group);
  ?>
- <html lang="en" dir="ltr">
-   <head>
-     <meta charset="utf-8">
-     <title></title>
-   </head>
-   <body>
-     <p id="test">Привет <?php echo $_SESSION["userName"] ?> !</p>
-     <table>
+    <div class="wrapper">
+    <div class="indent">
+       <p id="test">Привет <?php echo $_SESSION["userName"] ?> !</p>
+    </div>
+       <table>
 
-     </table>
+       </table>
+     </div>
    </body>
    <script>
    function generateTableHead(table, data) {

@@ -39,6 +39,7 @@ if ($result){
       $image_data[$i] = base64_encode($image_data[$i]);
     }
   }
+
   //   array_push($answers, $row['answer_'.$i+1])
 }else{
   die("Ошибка обнаружения задания с ID {$ex_id}");

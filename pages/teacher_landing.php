@@ -10,13 +10,13 @@ $tests = array();
 $group = array();
 $links = array();
 while ($row = mysqli_fetch_array($result)){
-  array_push($text, $row['exercise_text']);
+  array_push($text, $row['exerciseName']);
   array_push($ex_id, $row['ex_id']);
   array_push($group, $row["exerciseGroup"]);
   array_push($links, "http://localhost/myphp/diplomaphpfiles/pages/show_test_results.php?ex_id=".$row['ex_id']);
 
 }
-$tests["text"] = $text;
+$tests["name"] = $text;
 $tests["ex_id"] = $ex_id;
 $tests["group"] = $group;
 $tests["link"] = $links;
@@ -28,15 +28,21 @@ $jsonTests = json_encode($tests);
 //   exit();
 // }
  ?>
+ <div class="wrapper">
+  <div class="indent">
+<p id="test">Привет <?php echo $_SESSION["userName"] ?> !</p>
+
 <form class="" action="create_test.php" method="post">
   <input type="submit" value="Создать тест" class = "button" />
 </form>
 
-<p id="test">Привет <?php echo $_SESSION["userName"] ?> !</p>
+
+</div>
 <table>
 
 </table>
 
+</div>
   </body>
   <script>
   function generateTableHead(table, data) {
