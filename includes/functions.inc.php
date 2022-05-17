@@ -40,7 +40,7 @@
   }
 
   function uidExists($link, $username, $email){
-    $sql = "SELECT * FROM users WHERE usersUid = ? or usersEmail = ?;";
+    $sql = "SELECT * FROM users WHERE usersUID = ? or usersEmail = ?;";
     $stmt = mysqli_stmt_init($link);
     if (!mysqli_stmt_prepare($stmt, $sql)) {
       header("location: ../pages/signup.php?error=stmtfailed");
@@ -64,7 +64,7 @@
 
 
     function createUser($link, $name, $email, $username, $pwd, $group){
-      $sql = "INSERT INTO users (usersName, usersEmail, usersUid, usersPwd, usersPermission, usersGroup) VALUES (?,?,?,?, 'student', ?);";
+      $sql = "INSERT INTO users (usersName, usersEmail, usersUID, usersPwd,usersGroup, usersPermission) VALUES (?,?,?,?,?,'student');";
       $stmt = mysqli_stmt_init($link);
       if (!mysqli_stmt_prepare($stmt, $sql)) {
         header("location: ../pages/signup.php?error=stmtfailed");
@@ -106,8 +106,8 @@
       }
       else if ($checkPwd === true) {
         session_start();
-        $_SESSION["userid"] = $uidExists["usersId"];
-        $_SESSION["useruid"] = $uidExists["usersUid"];
+        $_SESSION["userid"] = $uidExists["usersID"];
+        $_SESSION["useruid"] = $uidExists["usersUID"];
         $_SESSION["userPermission"] = $uidExists["usersPermission"];
         $_SESSION["userName"] = $uidExists["usersName"];
         $_SESSION["userGroup"] = $uidExists["usersGroup"];
@@ -122,23 +122,60 @@
       }
     }
 
-    function displayTests($link,$group){
+    function displayTests($link,$group,$userid){
+      $sql_comleted_query = "SELECT * FROM completedexercises WHERE cdUserGroup = '". $group . "' AND cdUserID = ". $userid;
       $sql_exercise_query = "SELECT * FROM exercise WHERE exerciseGroup = '". $group . "';";
       $result = mysqli_query($link, $sql_exercise_query);
+      $completed_result = mysqli_query($link,$sql_comleted_query);
       $ex_name = array();
       $ex_id = array();
       $teacher = array();
       $tests = array();
       $links = array();
+      $comments = array();
+      $completed_ex_id = array();
+      $completed_comments = array();
+      $pending_ex_id = array();
+      $pending_comments = array();
+      $returned_ex_id = array();
+      $returned_comments = array();
+
+      while ($completed_row = mysqli_fetch_array($completed_result)) {
+        if ($completed_row['cdImageStatus'] === '0') {
+          array_push($completed_ex_id, $completed_row['ceExID']);
+          $completed_comments[$completed_row['ceExID']] = $completed_row['ceComments'];
+        }elseif ($completed_row['cdImageStatus'] === '1') {
+          array_push($pending_ex_id, $completed_row['ceExID']);
+          $pending_comments[$completed_row['ceExID']] = $completed_row['ceComments'];
+        }else {
+          array_push($returned_ex_id, $completed_row['ceExID']);
+          $returned_comments[$completed_row['ceExID']] = $completed_row['ceComments'];
+        }
+      }
       while ($row = mysqli_fetch_array($result)){
         array_push($teacher, $row['exerciseTeacher']);
         array_push($ex_name, $row['exerciseName']);
         array_push($ex_id, $row['ex_id']);
-        array_push($links, "http://localhost/myphp/diplomaphpfiles/pages/show_test.php?ex_id=".$row['ex_id']);
+        if (in_array($row['ex_id'], $completed_ex_id)) {
+            array_push($links, "completed");
+            array_push($comments, $completed_comments[$row['ex_id']]);
+        } elseif (in_array($row['ex_id'], $pending_ex_id)) {
+            array_push($links, "pending");
+            array_push($comments, $pending_comments[$row['ex_id']]);
+        } elseif (in_array($row['ex_id'], $returned_ex_id)) {
+            array_push($links, "http://localhost/myphp/diplomaphpfiles/pages/show_test.php?ex_id=".$row['ex_id']);
+            array_push($comments, $returned_comments[$row['ex_id']]);
+        } else {
+          array_push($links, "http://localhost/myphp/diplomaphpfiles/pages/show_test.php?ex_id=".$row['ex_id']);
+          array_push($comments, NULL);
+        }
+
+
       }
       $tests["text"] = $ex_name;
       $tests["teacher"] = $teacher;
       $tests["ex_id"] = $ex_id;
+      $tests["comments"] = $comments;
       $tests["link"] = $links;
       $jsonTests = json_encode($tests);
       return $jsonTests;

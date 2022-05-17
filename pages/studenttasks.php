@@ -8,8 +8,10 @@ if ($_SESSION["userPermission"] !== 'student'){
 }
 require_once '../includes/functions.inc.php';
 //weird '' and "" shit, look into it.......
+
 $group = $_SESSION["userGroup"];
-$jsonTests=displayTests($link,$group);
+$userid = $_SESSION["userid"];
+$jsonTests=displayTests($link,$group,$userid);
  ?>
     <div class="wrapper">
     <div class="indent">
@@ -37,12 +39,18 @@ $jsonTests=displayTests($link,$group);
        let row = table.insertRow();
        for (let key in Object.keys(data)){
          if (Object.keys(data)[key].localeCompare("link") == 0){
-           let a = document.createElement('a');
-           let cell = row.insertCell();
-           let linkText = document.createTextNode("link");
-           a.appendChild(linkText);
-           a.href = data[Object.keys(data)[key]][i];
-           cell.appendChild(a);
+           if ((data[Object.keys(data)[key]][i].localeCompare("completed") == 0) || (data[Object.keys(data)[key]][i].localeCompare("pending") == 0)) {
+             let cell = row.insertCell();
+             let text = document.createTextNode(data[Object.keys(data)[key]][i]);
+             cell.appendChild(text);
+           } else {
+             let a = document.createElement('a');
+             let cell = row.insertCell();
+             let linkText = document.createTextNode("link");
+             a.appendChild(linkText);
+             a.href = data[Object.keys(data)[key]][i];
+             cell.appendChild(a);
+           }
          } else {
          let cell = row.insertCell();
          let text = document.createTextNode(data[Object.keys(data)[key]][i]);
