@@ -3,24 +3,24 @@ require_once "navbar.php";
 //вводим нужные переменные из таблиц.
 $ex_id = $_REQUEST['ex_id'];
 $_SESSION['current_ex_id'] = $ex_id;
-$select_query = "SELECT * FROM exercise WHERE ex_id = " . $ex_id;
+$select_query = "SELECT * FROM exercise WHERE exID = " . $ex_id;
 $result = mysqli_query($link, $select_query);
 if ($result){
   $row = mysqli_fetch_array($result);
-  $exercise = $row['exercise_text'];
-  $sub_answers_amount = $row['sub_answers_amount'];
-  $image_amount = $row['image_amount'];
-  $ex_name = $row['exerciseName'];
+  $exercise = $row['exText'];
+  $sub_answers_amount = $row['exSubAmount'];
+  $image_amount = $row['exImgAmount'];
+  $ex_name = $row['exName'];
   $sub_answers = array();
   $sub_answer_text = array();
   $image_data = array();
   if ($sub_answers_amount != 0) {
    for ($i=1; $i<=$sub_answers_amount; $i++){
-     $answer_query = "SELECT * FROM sub_answers WHERE question_id = ". $ex_id . " AND sub_answer_id = ". $i;
+     $answer_query = "SELECT * FROM subanswers WHERE saExID = ". $ex_id . " AND saAnswerID = ". $i;
      $ans_result = mysqli_query($link, $answer_query);
      $ans_row = mysqli_fetch_array($ans_result);
-     $sub_answers[$i-1] = $ans_row['sub_answer'];
-     $sub_answer_text[$i-1] = $ans_row['sub_answers_text'];
+     $sub_answers[$i-1] = $ans_row['saAnswer'];
+     $sub_answer_text[$i-1] = $ans_row['saText'];
       }
     }
   //  $answer_query = "SELECT * FROM sub_answers WHERE question_id = ". $ex_id;
@@ -32,10 +32,10 @@ if ($result){
   //   }
   if ($image_amount != 0){
     for($i=0; $i<$image_amount; $i++){
-      $image_query = "SELECT * FROM images WHERE ex_id = ". $ex_id . " AND pic_ex_id = ". $i;
+      $image_query = "SELECT * FROM eximages WHERE eximgExID = ". $ex_id . " AND eximgPicID = ". $i;
       $image_result = mysqli_query($link, $image_query);
       $image_row = mysqli_fetch_array($image_result);
-      $image_data[$i] = $image_row['imagedata'];
+      $image_data[$i] = $image_row['eximgData'];
       $image_data[$i] = base64_encode($image_data[$i]);
     }
   }
@@ -106,6 +106,7 @@ if ($result){
         container.appendChild(document.createTextNode(sub_text[j] + "      "));
         // Create an <input> element, set its type and name attributes
         var input = document.createElement("input");
+        
         if (answers[j] === "image"){
           input.type = "file";
           input.name = "member" + j;

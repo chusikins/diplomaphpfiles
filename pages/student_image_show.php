@@ -2,14 +2,14 @@
 require_once 'navbar.php';
 $ex_id = $_REQUEST['ex_id'];
 $user_id = $_REQUEST['user_id'];
-$sql_exercise_query ="SELECT * FROM exercise WHERE ex_id = " . $ex_id;
-$sql_images_query ="SELECT * FROM studentimages WHERE siExID = " . $ex_id. " AND siUserID =". $user_id;
+$sql_exercise_query ="SELECT * FROM exercise WHERE exID = " . $ex_id;
+$sql_images_query ="SELECT * FROM studimages WHERE siExID = " . $ex_id. " AND siUserID =". $user_id;
 
 
 $exersice_result = mysqli_query($link, $sql_exercise_query);
 $exersice_row = mysqli_fetch_array($exersice_result);
-$ex_name = $exersice_row['exerciseName'];
-$ex_text = $exersice_row['exercise_text'];
+$ex_name = $exersice_row['exName'];
+$ex_text = $exersice_row['exText'];
 $image_data = array();
 $sub_answer_id = array();
 $sub_answer_text = array();
@@ -17,15 +17,15 @@ $sub_answer_text = array();
 $images_result = mysqli_query($link, $sql_images_query);
 
 foreach ($images_result as $row) {
-  array_push($image_data, base64_encode($row['siImgageData']));
+  array_push($image_data, base64_encode($row['siData']));
   array_push($sub_answer_id, $row['siSubAnsID']);
 }
 
 foreach ($sub_answer_id as $key) {
-  $sub_answer_query = "SELECT sub_answers_text FROM sub_answers WHERE question_id = " . $ex_id. " AND sub_answer_id = ". $key;
+  $sub_answer_query = "SELECT saText FROM subanswers WHERE saExID = " . $ex_id. " AND saAnswerID = ". $key;
   $sub_answer_result = mysqli_query($link, $sub_answer_query);
   $sub_answer_row = mysqli_fetch_array($sub_answer_result);
-  array_push($sub_answer_text, $sub_answer_row['sub_answers_text']);
+  array_push($sub_answer_text, $sub_answer_row['saText']);
 }
 
 $imageencode = json_encode($image_data);

@@ -10,9 +10,9 @@ $ex_id = array();
 $tests = array();
 $links = array();
 while ($row = mysqli_fetch_array($result)){
-  array_push($text, $row['exercise_text']);
-  array_push($ex_id, $row['ex_id']);
-  array_push($links, "http://localhost/myphp/diplomaphpfiles/pages/show_test_results.php?ex_id=".$row['ex_id']);
+  array_push($text, $row['exText']);
+  array_push($ex_id, $row['exID']);
+  array_push($links, "http://localhost/myphp/diplomaphpfiles/pages/show_test_results.php?ex_id=".$row['exID']);
 }
 $tests["text"] = $text;
 $tests["ex_id"] = $ex_id;

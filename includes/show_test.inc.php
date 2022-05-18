@@ -14,12 +14,12 @@
     $status = '1';
   }
 
-  $select_query = "SELECT * FROM exercise WHERE ex_id = " . $ex_id;
+  $select_query = "SELECT * FROM exercise WHERE exID = " . $ex_id;
   $result = mysqli_query($link, $select_query);
   $row = mysqli_fetch_array($result);
-  $sub_answers_amount = $row['sub_answers_amount'];
+  $exSubAmount = $row['exSubAmount'];
 
-  $insert_complition_sql = "INSERT INTO completedexercises (ceExID, cdUserID, cdUserGroup, cdImageStatus) VALUES (?,?,?,?);";
+  $insert_complition_sql = "INSERT INTO completedex (ceExID, ceUserID, ceGroup, ceStatus) VALUES (?,?,?,?);";
   $stmt = mysqli_stmt_init($link);
   if (!mysqli_stmt_prepare($stmt, $insert_complition_sql)) {
     header("location: ../pages/studenttasks.php?error=stmtfailed");
@@ -29,11 +29,11 @@
   mysqli_stmt_execute($stmt);
   mysqli_stmt_close($stmt);
 
-  $sub_answer_query = "SELECT * FROM sub_answers WHERE question_id = " . $ex_id . " AND sub_answer = 'image';";
+  $sub_answer_query = "SELECT * FROM subanswers WHERE saExID = " . $ex_id . " AND saAnswer = 'image';";
   $sub_result = mysqli_query($link, $sub_answer_query);
   $subansimages = array();
   while ($row = mysqli_fetch_array($sub_result)){
-    array_push($subansimages, $row['sub_answer_id']);
+    array_push($subansimages, $row['saAnswerID']);
   }
 
 
@@ -65,17 +65,18 @@
     $image_size = $image['size'];
     $image_data = file_get_contents($image['tmp_name']);
 
-    $insert_image_sql = sprintf("INSERT INTO studentimages " .
+    $insert_image_sql = sprintf("INSERT INTO studimages " .
     "(siExID, siSubAnsID, siUserID, siMimetype," .
-    "	siImgageData, siFileName, siFileSize)" .
-    "VALUES (%d, %d, %d, '%s', '%s', '%s',%d);",
+    " siFilesize,	siData, siFileName)" .
+    "VALUES (%d, %d, %d, '%s', %d, '%s','%s');",
     mysqli_real_escape_string($link, $ex_id),
     mysqli_real_escape_string($link, $subansimages[$i]),
     mysqli_real_escape_string($link, $userid),
     mysqli_real_escape_string($link, $image_mime_type),
+    mysqli_real_escape_string($link, $image_size),
     mysqli_real_escape_string($link, $image_data),
-    mysqli_real_escape_string($link, $image_filename),
-    mysqli_real_escape_string($link, $image_size));
+    mysqli_real_escape_string($link, $image_filename)
+    );
     mysqli_query($link, $insert_image_sql);
     $i++;
   }

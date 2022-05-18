@@ -123,8 +123,8 @@
     }
 
     function displayTests($link,$group,$userid){
-      $sql_comleted_query = "SELECT * FROM completedexercises WHERE cdUserGroup = '". $group . "' AND cdUserID = ". $userid;
-      $sql_exercise_query = "SELECT * FROM exercise WHERE exerciseGroup = '". $group . "';";
+      $sql_comleted_query = "SELECT * FROM completedex WHERE ceGroup = '". $group . "' AND ceUserID = ". $userid;
+      $sql_exercise_query = "SELECT * FROM exercise WHERE exGroup = '". $group . "';";
       $result = mysqli_query($link, $sql_exercise_query);
       $completed_result = mysqli_query($link,$sql_comleted_query);
       $ex_name = array();
@@ -141,10 +141,10 @@
       $returned_comments = array();
 
       while ($completed_row = mysqli_fetch_array($completed_result)) {
-        if ($completed_row['cdImageStatus'] === '0') {
+        if ($completed_row['ceStatus'] === '0') {
           array_push($completed_ex_id, $completed_row['ceExID']);
           $completed_comments[$completed_row['ceExID']] = $completed_row['ceComments'];
-        }elseif ($completed_row['cdImageStatus'] === '1') {
+        }elseif ($completed_row['ceStatus'] === '1') {
           array_push($pending_ex_id, $completed_row['ceExID']);
           $pending_comments[$completed_row['ceExID']] = $completed_row['ceComments'];
         }else {
@@ -153,20 +153,20 @@
         }
       }
       while ($row = mysqli_fetch_array($result)){
-        array_push($teacher, $row['exerciseTeacher']);
-        array_push($ex_name, $row['exerciseName']);
-        array_push($ex_id, $row['ex_id']);
-        if (in_array($row['ex_id'], $completed_ex_id)) {
+        array_push($teacher, $row['exTeacherName']);
+        array_push($ex_name, $row['exName']);
+        array_push($ex_id, $row['exID']);
+        if (in_array($row['exID'], $completed_ex_id)) {
             array_push($links, "completed");
-            array_push($comments, $completed_comments[$row['ex_id']]);
-        } elseif (in_array($row['ex_id'], $pending_ex_id)) {
+            array_push($comments, $completed_comments[$row['exID']]);
+        } elseif (in_array($row['exID'], $pending_ex_id)) {
             array_push($links, "pending");
-            array_push($comments, $pending_comments[$row['ex_id']]);
-        } elseif (in_array($row['ex_id'], $returned_ex_id)) {
-            array_push($links, "http://localhost/myphp/diplomaphpfiles/pages/show_test.php?ex_id=".$row['ex_id']);
-            array_push($comments, $returned_comments[$row['ex_id']]);
+            array_push($comments, $pending_comments[$row['exID']]);
+        } elseif (in_array($row['exID'], $returned_ex_id)) {
+            array_push($links, "http://localhost/myphp/diplomaphpfiles/pages/show_test.php?ex_id=".$row['exID']);
+            array_push($comments, $returned_comments[$row['exID']]);
         } else {
-          array_push($links, "http://localhost/myphp/diplomaphpfiles/pages/show_test.php?ex_id=".$row['ex_id']);
+          array_push($links, "http://localhost/myphp/diplomaphpfiles/pages/show_test.php?ex_id=".$row['exID']);
           array_push($comments, NULL);
         }
 
@@ -185,7 +185,7 @@
     function update_submitted_answer($link, $result,$comments,$ex_id,$user_id){
       $result = "'". $result . "'";
 
-      $sql_update_query = "UPDATE completedexercises SET cdImageStatus =". $result .", ceComments = ? WHERE ceExID = ? AND cdUserID = ?" ;
+      $sql_update_query = "UPDATE completedex SET ceStatus =". $result .", ceComments = ? WHERE ceExID = ? AND ceUserID = ?" ;
       $stmt = mysqli_stmt_init($link);
       if (!mysqli_stmt_prepare($stmt, $sql_update_query)) {
         header("location: ../pages/teacher_landing.php?error=stmtfailed");

@@ -1,0 +1,56 @@
+DROP DATABASE IF EXISTS diploma_db;
+CREATE DATABASE diploma_db;
+CREATE TABLE users(
+	usersID int(11) PRIMARY KEY AUTO_INCREMENT,
+	usersName varchar(128) NOT NULL,
+	usersEmail varchar(128) NOT NULL,
+    usersUID varchar(128) NOT NULL,
+    usersPwd varchar(128) NOT NULL,
+    usersGroup ENUM('101','102','103','104','105'),
+    usersPermission ENUM('student','teacher') NOT NULL
+);
+CREATE TABLE exercise(
+	exID int(11) PRIMARY KEY AUTO_INCREMENT,
+    exText varchar(1000),
+    exSubAmount int(11) NOT NULL,
+    exImgAmount int(11) NOT NULL,
+    exGroup ENUM('101','102','103','104','105') NOT NULL,
+    exName varchar(200) NOT NULL,
+    exTeacherName varchar(128) NOT NULL,
+	exTeacherID int(11) NOT NULL
+);
+CREATE TABLE subanswers(
+	saExID int(11) NOT NULL,
+    saAnswerID int(11) NOT NULL,
+    saText varchar(1000) NOT NULL,
+    saAnswer varchar(200) NOT NULL,
+    PRIMARY KEY (saExID, saAnswerID)
+);
+CREATE TABLE eximages( 
+    eximgExID int(11) NOT NULL,
+    eximgPicID int(11) NOT NULL,
+    eximgMimetype varchar(50) NOT NULL,
+    eximgFilesize int(11) NOT NULL,
+    eximgData mediumblob NOT NULL,
+    eximgFilename varchar(200) NOT NULL,
+    PRIMARY KEY (eximgExID, eximgPicID)
+);
+CREATE TABLE studimages( 
+    siExID int(11) NOT NULL,
+    siSubAnsID int(11) NOT NULL,
+    siUserID int(11) NOT NULL,
+    siMimetype varchar(50) NOT NULL,
+    siFilesize int(11) NOT NULL,
+    siData mediumblob NOT NULL,
+    siFilename varchar(200) NOT NULL,
+    PRIMARY KEY (siExID, siSubAnsID, siUserID)
+);
+CREATE TABLE completedex(
+	ceExID int(11) NOT NULL,
+    ceUserID int(11) NOT NULL,
+    ceGroup ENUM('101','102','103','104','105') NOT NULL,
+    ceComments varchar(1000),
+    ceStatus ENUM('0','1','2') NOT NULL,
+    PRIMARY KEY(ceExID,ceUserID)
+);
+

@@ -10,13 +10,14 @@ if (isset($_POST['submit'])){
   2 => 'Превышен макс. размер файла, указанный в форме HTML',
   3 => 'Была отправлена только часть файла',
   4 => 'Файл для отправки не был выбран.');
-  
+
   $image_number = trim($_POST['images_number']);
   $exercise_text = trim($_POST['exercise_text']);
   $sub_answers_amount = trim($_POST['sub_answer_amount']);
   $group_assigned = trim($_POST['group']);
   $ex_name = trim($_POST['ex_name']);
   $teacher_name = $_SESSION["userName"];
+  $teacher_id = $_SESSION["userid"];
   $answer_key = array();
   $sub_answer_text = array();
   // print_r($_FILES);
@@ -31,14 +32,14 @@ if (isset($_POST['submit'])){
   // $insert_exercise_sql = sprintf("INSERT INTO exercise ".
   // "(exercise_text, sub_answers_amount, image_amount)".
   // "VALUES ('%s', %d, %d);", $exercise_text, $sub_answers_amount, $image_number);
-  $insert_exercise_sql = "INSERT INTO exercise (exercise_text, sub_answers_amount, image_amount, exerciseGroup, exerciseName, exerciseTeacher) VALUES (?,?,?,?,?,?);";
+  $insert_exercise_sql = "INSERT INTO exercise (exText, exSubAmount, exImgAmount, exGroup, exName, exTeacherName, exTeacherID) VALUES (?,?,?,?,?,?,?);";
   $stmt = mysqli_stmt_init($link);
   if (!mysqli_stmt_prepare($stmt, $insert_exercise_sql)) {
     header("location: ../pages/create_test.php?error=stmtfailed");
     exit();
   }
 
-  mysqli_stmt_bind_param($stmt, "sddsss", $exercise_text, $sub_answers_amount, $image_number, $group_assigned, $ex_name, $teacher_name);
+  mysqli_stmt_bind_param($stmt, "sddsssd", $exercise_text, $sub_answers_amount, $image_number, $group_assigned, $ex_name, $teacher_name, $teacher_id);
   mysqli_stmt_execute($stmt);
   mysqli_stmt_close($stmt);
 
@@ -51,13 +52,13 @@ if (isset($_POST['submit'])){
     // $update_answer_sql = sprintf("INSERT INTO sub_answers " .
     // "(question_id, sub_answer_id, sub_answer, sub_answers_text)" . "VALUES(%d,%d,'%s','%s')", $ex_id, $i+1, $answer_key[$i], $sub_answer_text[$i]);
     // mysqli_query($link,$update_answer_sql) or die ("Not insert in DD" .mysqli_error($link));
-    $insert_answer_sql = "INSERT INTO sub_answers (question_id, sub_answer_id, sub_answer, sub_answers_text) VALUES (?,?,?,?);";
+    $insert_answer_sql = "INSERT INTO subanswers (saExID, saAnswerID, saText, saAnswer) VALUES (?,?,?,?);";
     $stmt = mysqli_stmt_init($link);
     if (!mysqli_stmt_prepare($stmt, $insert_answer_sql)) {
       header("location: ../pages/create_test.php?error=stmtfailed");
       exit();
     }
-    mysqli_stmt_bind_param($stmt, "ddss", $ex_id, $icount, $anskeyex, $texttemp);
+    mysqli_stmt_bind_param($stmt, "ddss", $ex_id, $icount, $texttemp, $anskeyex);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
   }
@@ -92,9 +93,9 @@ if (isset($_POST['submit'])){
     $image_mime_type = $image_info['mime'];
     $image_size = $image['size'];
     $image_data = file_get_contents($image['tmp_name']);
-    $insert_image_sql = sprintf("INSERT INTO images " .
-    "(ex_id, pic_ex_id, mime_type," .
-    "filesize, imagedata, filename)" .
+    $insert_image_sql = sprintf("INSERT INTO eximages " .
+    "(eximgExID, eximgPicID, eximgMimetype," .
+    "eximgFilesize, eximgData, eximgFilename)" .
     "VALUES (%d, %d, '%s', %d, '%s','%s');",
     mysqli_real_escape_string($link, $ex_id),
     mysqli_real_escape_string($link, $i),

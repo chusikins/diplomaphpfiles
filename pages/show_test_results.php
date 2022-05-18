@@ -4,14 +4,14 @@ require_once 'navbar.php';
 require_once '../db/database_connection.php';
 $ex_id = $_REQUEST['ex_id'];
 
-$sql_exercise_query ="SELECT * FROM exercise WHERE ex_id = " . $ex_id;
+$sql_exercise_query ="SELECT * FROM exercise WHERE exID = " . $ex_id;
 // $sub_subanswers_query = "SELECT * FROM sub_answers WHERE question_id = " . $ex_id . " AND sub_answer = 'image';";
-$completed_query = "SELECT * FROM completedexercises WHERE ceExID = " . $ex_id;
+$completed_query = "SELECT * FROM completedex WHERE ceExID = " . $ex_id;
 
 $exersice_result = mysqli_query($link, $sql_exercise_query);
 $exersice_row = mysqli_fetch_array($exersice_result);
-$ex_name = $exersice_row['exerciseName'];
-$ex_text = $exersice_row['exercise_text'];
+$ex_name = $exersice_row['exName'];
+$ex_text = $exersice_row['exText'];
 
 $completed_result = mysqli_query($link, $completed_query);
 $studID = array();
@@ -20,14 +20,14 @@ $user_names = array();
 $links = array();
 if (mysqli_num_rows($completed_result) !== 0){
     foreach($completed_result as $row){
-      array_push($studID, $row['cdUserID']);
-      array_push($imgStatus, $row['cdImageStatus']);
-      if ($row['cdImageStatus'] != "0"){
-        $links[$row['cdUserID']] = "http://localhost/myphp/diplomaphpfiles/pages/student_image_show.php?user_id=".$row['cdUserID']."&ex_id=".$ex_id;
+      array_push($studID, $row['ceUserID']);
+      array_push($imgStatus, $row['ceStatus']);
+      if ($row['ceStatus'] != "0"){
+        $links[$row['ceUserID']] = "http://localhost/myphp/diplomaphpfiles/pages/student_image_show.php?user_id=".$row['ceUserID']."&ex_id=".$ex_id;
       }
     }
     foreach($studID as $element){
-      $user_query = "SELECT * FROM users WHERE usersId = " . $element;
+      $user_query = "SELECT * FROM users WHERE usersID = " . $element;
       $user_result = mysqli_query($link, $user_query);
       $user_row = mysqli_fetch_array($user_result);
       array_push($user_names, $user_row['usersName']);

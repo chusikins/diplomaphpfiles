@@ -8,7 +8,7 @@ if(DEBUG_MODE) {
 define("DATABASE_HOST", "localhost");
 define("DATABASE_USERNAME", "root");
 define("DATABASE_PASSWORD", "");
-define("DATABASE_NAME", "teacher_student_test");
+define("DATABASE_NAME", "diploma_db");
 
 function debug_print($message){
   if (DEBUG_MODE){
