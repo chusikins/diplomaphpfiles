@@ -1,2 +1,2 @@
-# diploma_php_files
- Files with diploma stuff
+# php_files
+ Files with php stuff and whatnot
